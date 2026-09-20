@@ -1,31 +1,69 @@
-//public class Roc13{
-//Diumenge
-
-//public char [] minus = {'a','á','à','b','c','ç','e','é','è','f','g','h','i','í','ì','ï','j','k','l','m','n','ñ','o','ó','ò','p','q','r','s','t','u','ú','ù','ü','v','w','x','y','z'};
-
-//public char [] mayus = {'A', 'Á', 'À', 'B', 'C','Ç', 'E', 'É', 'È', 'F', 'G', 'H', 'I', 'Í', 'Ì', 'Ï', 'J', 'K', 'L', 'M', 'N', 'Ñ', 'O', 'Ó', 'Ò', 'P', 'Q', 'R', 'S', 'T', 'U', 'Ú', 'Ù', 'Ü', 'V', 'W', 'X', 'Y', 'Z'};  
+//Act 1 - Diumenge
 
 public class Roc13 {
 
     public static final String abc = "aáàbcdeéèfghiíìïjklmnñopqrstuúùüvwxyz";
 
-    public static char [] minusc = abc.toCharArray();
+    public static char [] minuscules = abc.toCharArray();
 
-    public static char [] mayusc = abc.toUpperCase().toCharArray();
+    public static char [] mayuscules = abc.toUpperCase().toCharArray();
 
-    public char xifraRot13( char letra) {
+    public String xifraRot13(String text) {
+        StringBuilder resultat = new StringBuilder();
 
-        int i  = new String(minusc).indexOf(letra);
-        return minusc[(i+13) % minusc.length];
+        for (char lletra : text.toCharArray()) {
+            int posicio = new String(minuscules).indexOf(lletra);
+            if (posicio >= 0) {
+                resultat.append(minuscules[(posicio + 13) % minuscules.length]);
+                continue;
+            }
+
+            posicio = new String(mayuscules).indexOf(lletra);
+            if (posicio >= 0) {
+                resultat.append(mayuscules[(posicio + 13) % mayuscules.length]);
+            } else {
+                resultat.append(lletra);
+            }
         }
-  
-    public char desXifraRot13 (char lletra) {
-        int j = new String().indexOf(lletra);
-        return xifraRot13(minusc[(j-13) % minusc.length]); 
+
+        return resultat.toString();
+    }
+
+    public String desXifraRot13(String text) {
+        StringBuilder resultat = new StringBuilder();
+
+        for (char lletra : text.toCharArray()) {
+            int posicio = new String(minuscules).indexOf(lletra);
+            if (posicio >= 0) {
+                resultat.append(minuscules[Math.floorMod(posicio - 13, minuscules.length)]);
+                continue;
+            }
+
+            posicio = new String(mayuscules).indexOf(lletra);
+            if (posicio >= 0) {
+                resultat.append(mayuscules[Math.floorMod(posicio - 13, mayuscules.length)]);
+            } else {
+                resultat.append(lletra);
+            }
         }
+
+        return resultat.toString();
 
     }
 
     public static void main(String[] args) {
 
+        var xifrat = new Roc13();
+        System.out.println(xifrat.xifraRot13("ABC"));
+        System.out.println(xifrat.xifraRot13("XYZ"));
+        System.out.println(xifrat.xifraRot13("Hola, Mr. Calçot"));
+        System.out.println(xifrat.xifraRot13("Perdò, per tu què és"));
+
+        var desxifrat = new Roc13();
+        System.out.println(desxifrat.desXifraRot13(xifrat.xifraRot13("ABC")));
+        System.out.println(desxifrat.desXifraRot13(xifrat.xifraRot13("XYZ")));
+        System.out.println(desxifrat.desXifraRot13(xifrat.xifraRot13("Hola, Mr. Calçot")));
+        System.out.println(desxifrat.desXifraRot13(xifrat.xifraRot13("Perdò, per tu què és")));
+
     }
+}
