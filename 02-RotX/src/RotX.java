@@ -1,43 +1,90 @@
-public class RotX{
+public class RotX {
 
-    public static final String abc = "aáàbcdeéèfghiíìïjklmnñopqrstuúùüvwxyz";
+    public static final String abc = "aáàbcçdeéèfghiíìïjklmnñoóòpqrstuúùüvwxyz";
 
-    public static char [] minuscules = abc.toCharArray();
+    public static char[] minuscules = abc.toCharArray();
 
-    public static char [] mayuscules = abc.toUpperCase().toCharArray();
+    public static char[] mayuscules = abc.toUpperCase().toCharArray();
 
-    public String [] missatges = {"ABC", "XYZ", "Hola, Mr. Calçot", "Perdò, per tu què és"};
+    public String[] missatges = { "ABC", "XYZ", "Hola, Mr. Calçot", "Perdò, per tu què és" };
 
-    public String xifraRotX(String text, int x) {
+    public String transformar(String text, int x) {
 
-        String res ="";
-        x = 0;
+        StringBuffer res = new StringBuffer();
+
         for (char lletra : text.toCharArray()) {
             int posicio = new String(minuscules).indexOf(lletra);
-            if (posicio >= 0) {
-                res += minuscules[(posicio + x) % minuscules.length];
-                x++;
-                continue;
+            boolean esmajuscula= false;
+
+            if (posicio < 0) {
+                posicio = new String(mayuscules).indexOf(lletra);
+                esmajuscula = true;
             }
 
-            posicio = new String(mayuscules).indexOf(lletra);
+    
             if (posicio >= 0) {
-                res += mayuscules[(posicio + x) % mayuscules.length];
-            } else {
-                res += lletra;
-            }
-            x++;
-        }
-        return res;
+                int novaposicio = Math.floorMod(
+                    posicio + x, 
+                    abc.length()
+                );
+            
+        
+        res.append(
+            esmajuscula
+            ? mayuscules[novaposicio]
+            : minuscules[novaposicio]
+        );
 
+    }else {
+        res.append(lletra);
     }
-        public static void main(String[] args) {
+        
+    }
+    return res.toString();
+    }
+    
+    public String xifraRotX(String text, int x) {
+    return transformar(text, x);
+    }
+
+    public String desXifraRotX(String text, int x) {
+    return transformar(text, -x);
+    }
+
+    public String forçaBrutaRotX(String text) {
+        StringBuffer res = new StringBuffer();
+        for (int x = 0; x < abc.length(); x++) {
+            res.append("x = " + x + ": " + transformar(text, x) + "\n");
+        }
+        return res.toString();
+    }
+
+    public static void main(String[] args) {
         
         var xifrat = new RotX();
 
+        int x = 0;
             for (String missatge : xifrat.missatges) {
-                int x = missatge.charAt(0);
-                System.out.println(xifrat.xifraRotX( "("+ x + ") "+ missatge, 1));
-            }
+
+                System.out.println(xifrat.xifraRotX( "("+ x + ") "+ missatge, x));
+              x += 2;  
+            };
+        
+        
+            var desxifrat = new RotX();
+            
+            int y = 0;
+            for (String missatge : desxifrat.missatges) {
+                System.out.println(desxifrat.desXifraRotX( "("+ y + ") "+ xifrat.xifraRotX(missatge, y), y));
+              y += 2;  
+            };
+
+            int z = 0;
+            var forçaBruta = new RotX();
+            for (String missatge : forçaBruta.missatges) {
+                System.out.println(forçaBruta.forçaBrutaRotX( "("+ z + ") "+ missatge));
+              z += 1;  
+            };
 }
+
 }
