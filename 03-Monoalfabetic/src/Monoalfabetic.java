@@ -1,4 +1,5 @@
-
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Monoalfabetic {
 
@@ -8,14 +9,25 @@ public class Monoalfabetic {
 
 
     public char[] permutaAlfabet(char[] abc) {
-        char[] permutacio = abc.clone();
-        for (int i = permutacio.length - 1; i > 0; i--) {
-            int randomIndex = (int) (Math.random() * (i + 1));
-            char temp = permutacio[i];
-            permutacio[i] = permutacio[randomIndex];
-            permutacio[randomIndex] = temp;
+        ArrayList<Character> list = new ArrayList<>();
+        for (char lletra : abc) {
+            list.add(lletra);
+        }
+
+        Collections.shuffle(list);
+
+        char[] permutacio = new char[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            permutacio[i] = list.get(i);
         }
         return permutacio;
+        // for (int i = permutacio.length - 1; i > 0; i--) {
+        //     int randomIndex = (int) (Math.random() * (i + 1));
+        //     char temp = permutacio[i];
+        //     permutacio[i] = permutacio[randomIndex];
+        //     permutacio[randomIndex] = temp;
+        // }
+        // return permutacio;
     }
 
 
