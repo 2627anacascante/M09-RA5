@@ -1,8 +1,9 @@
 package iticbcn.xifratge;
 import java.util.Random;
-import java.util.random.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.nio.charset.StandardCharsets;
 
 public class XifradorPolialfabetic implements Xifrador {
 
@@ -103,26 +104,48 @@ public class XifradorPolialfabetic implements Xifrador {
 
     
 
-    public static void main(String[] args){
-        String msgs[] = {"Test 01 àrbitre, coixí, Perímetre",
-                "Test 02 Taüll, DÍA, año",
-                "Test 03 Peça, Òrrius, Bòvila"};
+    // public static void main(String[] args){
+    //     String msgs[] = {"Test 01 àrbitre, coixí, Perímetre",
+    //             "Test 02 Taüll, DÍA, año",
+    //             "Test 03 Peça, Òrrius, Bòvila"};
 
-        String[] msgsXifrats = new String[msgs.length];
+    //     String[] msgsXifrats = new String[msgs.length];
 
-        System.out.println("Xifratge");
-        for(int i = 0; i<msgs.length; i++){
-            initRandom(clauSecreta);
-            msgsXifrats[i] = xifraPoliAlfa(msgs[i]);
-            System.out.printf("%34s-> %s%n", msgs[i], msgsXifrats[i]);
+    //     System.out.println("Xifratge");
+    //     for(int i = 0; i<msgs.length; i++){
+    //         initRandom(clauSecreta);
+    //         msgsXifrats[i] = xifraPoliAlfa(msgs[i]);
+    //         System.out.printf("%34s-> %s%n", msgs[i], msgsXifrats[i]);
+    //     }
+
+    //     System.out.println("Desxifratge");
+    //     for(int i = 0; i<msgs.length; i++){
+    //         initRandom(clauSecreta);
+    //         String msg = desxifraPoliAlfa(msgsXifrats[i]);
+    //         System.out.printf("%34s-> %s%n", msgsXifrats[i], msg);
+    //     }
+    // }
+    
+    @Override 
+    public TextXifrat xifra(String msg, String clau) throws ClauNoSuportada {
+        try {
+            long clauLong = Long.parseLong(clau);
+            initRandom(clauLong);
+        } catch (NumberFormatException e) {
+            throw new ClauNoSuportada("La clau ha de ser un string convertible a long.");
         }
+        return new TextXifrat(xifraPoliAlfa(msg).getBytes(StandardCharsets.UTF_8), clau);
+    }
 
-        System.out.println("Desxifratge");
-        for(int i = 0; i<msgs.length; i++){
-            initRandom(clauSecreta);
-            String msg = desxifraPoliAlfa(msgsXifrats[i]);
-            System.out.printf("%34s-> %s%n", msgsXifrats[i], msg);
+    @Override 
+    public String desxifra(TextXifrat xifrat, String clau) throws ClauNoSuportada {
+        try {
+            long clauLong = Long.parseLong(clau);
+            initRandom(clauLong);
+        } catch (NumberFormatException e) {
+            throw new ClauNoSuportada("La clau ha de ser un String convertible a long.");
         }
+        return desxifraPoliAlfa(new String(xifrat.getBytes(), StandardCharsets.UTF_8));
     }
     
     

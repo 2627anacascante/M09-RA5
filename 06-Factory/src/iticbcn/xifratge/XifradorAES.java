@@ -91,30 +91,30 @@ static String desxifraAES(byte[] bMsgXifrat, String password){
     
 
 
-public static void main(String[] args){                              // Punto de entrada del programa
-    String msgs[] = {"Lorem ipsum dicet", "Hola Andrés cómo está tu cuñado", 
-    "Ágora ïlla Otto"};                                              // Tres mensajes de prueba (con tildes, ñ y diéresis a propósito)
+// public static void main(String[] args){                              // Punto de entrada del programa
+//     String msgs[] = {"Lorem ipsum dicet", "Hola Andrés cómo está tu cuñado", 
+//     "Ágora ïlla Otto"};                                              // Tres mensajes de prueba (con tildes, ñ y diéresis a propósito)
 
-    for(int i=0; i< msgs.length; i++){                               // Recorre los mensajes uno a uno
-        String msg = msgs[i];                                        // Mensaje actual
+//     for(int i=0; i< msgs.length; i++){                               // Recorre los mensajes uno a uno
+//         String msg = msgs[i];                                        // Mensaje actual
 
-        byte[] bXifrats = null;                                      // Aquí irá el resultado cifrado (null hasta que se cifre)
-        String desxifrat = "";                                       // Aquí irá el texto descifrado
+//         byte[] bXifrats = null;                                      // Aquí irá el resultado cifrado (null hasta que se cifre)
+//         String desxifrat = "";                                       // Aquí irá el texto descifrado
 
-        try{
-            bXifrats = xifraAES(msg, CLAU);                          // Cifra el mensaje con la contraseña "Clau2"
-            desxifrat = desxifraAES(bXifrats, CLAU);                 // Lo descifra de nuevo con la misma contraseña
+//         try{
+//             bXifrats = xifraAES(msg, CLAU);                          // Cifra el mensaje con la contraseña "Clau2"
+//             desxifrat = desxifraAES(bXifrats, CLAU);                 // Lo descifra de nuevo con la misma contraseña
 
-        }catch(Exception e){                                         // Si cifrar o descifrar falla
-            System.out.println("Error de xifrat"
-                + e.getLocalizedMessage());                          // Muestra el mensaje de error
-        }
-        System.out.println("-------------------------");             // Línea separadora
-        System.out.println("Msg:" +msg );                            // Muestra el mensaje original
-        System.out.println("Enc" + new String(bXifrats));            // Muestra el cifrado (saldrán símbolos raros: son bytes, no texto). Si bXifrats es null, da NullPointerException
-        System.out.println("DEC:" + desxifrat);                      // Muestra el descifrado: debe ser igual al original
-    }
-}
+//         }catch(Exception e){                                         // Si cifrar o descifrar falla
+//             System.out.println("Error de xifrat"
+//                 + e.getLocalizedMessage());                          // Muestra el mensaje de error
+//         }
+//         System.out.println("-------------------------");             // Línea separadora
+//         System.out.println("Msg:" +msg );                            // Muestra el mensaje original
+//         System.out.println("Enc" + new String(bXifrats));            // Muestra el cifrado (saldrán símbolos raros: son bytes, no texto). Si bXifrats es null, da NullPointerException
+//         System.out.println("DEC:" + desxifrat);                      // Muestra el descifrado: debe ser igual al original
+//     }
+// }
 // ---------- Mètodes addicionals ----------
 
 // Genera un IV aleatori amb SecureRandom
@@ -151,6 +151,21 @@ private static byte[] extreureIV(byte[] bMsgXifrat) {
 private static byte[] getBytesXifrats(byte[] bMsgXifrat) {
     return Arrays.copyOfRange(bMsgXifrat, MIDA_IV, bMsgXifrat.length); // Copia desde la posición 16 hasta el final: el mensaje cifrado
     //por ejemplo, bMsgXifrat = [12, 34, 56, 78, 90, 123, 45, 67, 89, 101, 112, 131, 145, 167, 189, 200, ...] (IV + mensaje cifrado)
+}
+@Override
+public TextXifrat xifra(String msg, String clau) throws ClauNoSuportada {
+    try {
+        return new TextXifrat(xifraAES(msg, clau), clau);
+        //es (missatge, clau), clau) per poder guardar la clau dins del TextXifrat, 
+        // ja que el constructor de TextXifrat espera dos arguments: els bytes xifrats i la clau utilitzada per xifrar.
+    } catch (Exception e) {
+        throw new IllegalStateException("Error xifrant amb AES", e);
+    }
+}
+
+@Override
+public String desxifra(TextXifrat xifrat, String clau) throws ClauNoSuportada {
+    return desxifraAES(xifrat.getBytes(), clau);
 }
 
 }

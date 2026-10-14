@@ -61,32 +61,54 @@ public class XifradorRotX implements Xifrador {
         return res.toString();
     }
 
-    public static void main(String[] args) {
+//     public static void main(String[] args) {
         
-        var xifrat = new XifradorRotX();
+//         var xifrat = new XifradorRotX();
 
-        int x = 0;
-            for (String missatge : xifrat.missatges) {
+//         int x = 0;
+//             for (String missatge : xifrat.missatges) {
 
-                System.out.println(xifrat.xifraRotX( "("+ x + ") "+ missatge, x));
-              x += 2;  
-            };
+//                 System.out.println(xifrat.xifraRotX( "("+ x + ") "+ missatge, x));
+//               x += 2;  
+//             };
         
         
-            var desxifrat = new XifradorRotX();
+//             var desxifrat = new XifradorRotX();
             
-            int y = 0;
-            for (String missatge : desxifrat.missatges) {
-                System.out.println(desxifrat.desXifraRotX( "("+ y + ") "+ xifrat.xifraRotX(missatge, y), y));
-              y += 2;  
-            };
+//             int y = 0;
+//             for (String missatge : desxifrat.missatges) {
+//                 System.out.println(desxifrat.desXifraRotX( "("+ y + ") "+ xifrat.xifraRotX(missatge, y), y));
+//               y += 2;  
+//             };
 
-            int z = 0;
-            var forçaBruta = new XifradorRotX();
-            for (String missatge : forçaBruta.missatges) {
-                System.out.println(forçaBruta.forçaBrutaRotX( "("+ z + ") "+ missatge));
-              z += 1;  
-            };
+//             int z = 0;
+//             var forçaBruta = new XifradorRotX();
+//             for (String missatge : forçaBruta.missatges) {
+//                 System.out.println(forçaBruta.forçaBrutaRotX( "("+ z + ") "+ missatge));
+//               z += 1;  
+//             };
+// }
+@Override 
+
+public TextXifrat xifra(String msg, String clau) throws ClauNoSuportada {
+    int x;
+    try {
+        x = Integer.parseInt(clau);
+    } catch (NumberFormatException e) {
+        throw new ClauNoSuportada("La clau de RotX ha de ser un número sencer de 0-40.");
+    }
+    return new TextXifrat(xifraRotX(msg, x).getBytes(), clau);
 }
+
+    @Override
+    public String desxifra(TextXifrat xifrat, String clau) throws ClauNoSuportada {
+        int x;
+        try {
+            x = Integer.parseInt(clau);
+        } catch (NumberFormatException e) {
+            throw new ClauNoSuportada("La clau de RotX ha de ser un número sencer de 0 a 40.");
+        }
+        return desXifraRotX(new String(xifrat.getBytes()), x);
+    }
 
 }
