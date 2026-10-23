@@ -1,7 +1,7 @@
 package iticbcn.xifratge;
 
 import java.security.KeyPair;
-import java.xml.bind.DatatypeConverter;
+import javax.xml.bind.DatatypeConverter;
 
 
 public class Main {
